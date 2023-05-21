@@ -29,11 +29,10 @@ RUN --mount=type=cache,target=/go/pkg \
 RUN --mount=type=cache,target=/go/pkg \
     cd /usr/local/go/src && \
     go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
-    cd /usr/local/go/src/crypto/internal/edwards25519/field/_asm && \
-    go get -u github.com/mmcloughlin/avo golang.org/x/mod golang.org/x/sys golang.org/x/tools golang.org/x/xerrors && \
-    cd /usr/local/go/src/crypto/internal/bigmod/_asm && \
-    go get -u github.com/mmcloughlin/avo golang.org/x/mod golang.org/x/sys golang.org/x/tools golang.org/x/xerrors
-
+    for D in $(find / -name "go.mod" | sed -r 's|/[^/]+$||'); do echo "upgrading: $D" && cd $D && go get -u ./... && go mod tidy || echo "error while upgrading"; done && \
+    go clean -cache && \
+    go clean -modcache
+    
 # cleanup
 RUN go clean -cache && \
     go clean -modcache
