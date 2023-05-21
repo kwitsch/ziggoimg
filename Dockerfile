@@ -26,8 +26,10 @@ RUN --mount=type=cache,target=/go/pkg \
     cd /usr/local/go/src && \
     go get -u golang.org/x/sys && \
     go get -u golang.org/x/net && \
-    cd /usr/local/go/src/crypto/internal/edwards25519/field/_asm && \
-    go get -u golang.org/x/sys
+    go get -u golang.org/x/text && \
+    go get -u golang.org/x/crypto
+    
+
 
 # cleanup
 RUN go clean -cache && \
