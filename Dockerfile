@@ -19,10 +19,14 @@ ENV PATH="/usr/local/bin/zig:${PATH}" \
     GOOS="linux"
 RUN --mount=type=cache,target=/go/pkg \
     go install github.com/dosgo/zigtool/zigcc@latest && \
-    go install github.com/dosgo/zigtool/zigcpp@latest && \
-    cd /usr/local/go/src && \
+    go install github.com/dosgo/zigtool/zigcpp@latest
+
+# fix vulnerabilities
+RUN cd /usr/local/go/src && \
     go get -u golang.org/x/sys && \
-    go get -u golang.org/x/net || true
+    go get -u golang.org/x/net && \
+    cd /usr/local/go/src/crypto/internal/edwards25519/field/_asm && \
+    go get -u golang.org/x/sys
 
 # copy latest certificates
 COPY --from=ca-certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
