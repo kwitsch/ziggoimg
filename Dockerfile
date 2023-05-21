@@ -1,8 +1,18 @@
 # zig compiler
 FROM --platform=$BUILDPLATFORM ghcr.io/euantorano/zig:master AS zig-env
 
+# remove windows & macos includes
+RUN rm -R /usr/local/bin/zig/lib/libc/include/any-windows-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.11-none && \
+    rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.12-none && \
+    rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.13-none && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos.11-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos.12-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos.13-any
+
 # build environment
-FROM --platform=$BUILDPLATFORM golang:1-alpine AS build
+FROM --platform=$BUILDPLATFORM golang:1-alpine
 
 # setup zig & zigtool
 COPY --from=zig-env /usr/local/bin/zig /usr/local/bin/zig
@@ -24,7 +34,6 @@ RUN --mount=type=cache,target=/go/pkg \
     cd /usr/local/go/src/crypto/internal/bigmod/_asm && \
     go get -u github.com/mmcloughlin/avo golang.org/x/mod golang.org/x/sys golang.org/x/tools golang.org/x/xerrors
 
-
 # cleanup
 RUN go clean -cache && \
     go clean -modcache
@@ -34,7 +43,7 @@ WORKDIR /go/src
 
 # GOARCH ONBUILD
 ONBUILD ARG TARGETARCH
-ONBUILD ENV GOARCH=$TARGETARCH 
+ONBUILD RUN go env -w GOARCH=$TARGETARCH 
 
 # GOARM ONBUILD
 ONBUILD ARG TARGETVARIANT
