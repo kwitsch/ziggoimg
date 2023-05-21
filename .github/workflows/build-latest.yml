@@ -21,12 +21,11 @@ jobs:
       - name: Setup Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       
       - name: Checkout Latest Tag
         shell: bash
         run: |
-          git fetch --tags
           latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
           git checkout $latestTag
 
