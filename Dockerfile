@@ -20,8 +20,8 @@ ENV PATH="/usr/local/bin/zig:${PATH}" \
 RUN --mount=type=cache,target=/go/pkg \
     go install github.com/dosgo/zigtool/zigcc@latest && \
     go install github.com/dosgo/zigtool/zigcpp@latest && \
-    go get golang.org/x/sys && \
-    go get golang.org/x/net
+    go install golang.org/x/sys && \
+    go install golang.org/x/net
 
 # copy latest certificates
 COPY --from=ca-certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
