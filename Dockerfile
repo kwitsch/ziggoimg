@@ -24,11 +24,11 @@ RUN --mount=type=cache,target=/go/pkg \
 # fix vulnerabilities
 RUN --mount=type=cache,target=/go/pkg \
     cd /usr/local/go/src && \
-    go get -u golang.org/x/sys && \
-    go get -u golang.org/x/net && \
-    go get -u golang.org/x/text && \
-    go get -u golang.org/x/crypto
-    
+    go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
+    cd /usr/local/go/src/crypto/internal/edwards25519/field/_asm && \
+    go get -u github.com/mmcloughlin/avo golang.org/x/mod golang.org/x/sys golang.org/x/tools golang.org/x/xerrors && \
+    cd /usr/local/go/src/crypto/internal/bigmod/_asm && \
+    go get -u github.com/mmcloughlin/avo golang.org/x/mod golang.org/x/sys golang.org/x/tools golang.org/x/xerrors
 
 
 # cleanup
