@@ -1,10 +1,12 @@
-FROM --platform=$BUILDPLATFORM alpine:edge AS zig-env
+FROM --platform=$BUILDPLATFORM alpine AS zig-env
 
 ARG ZIG_VERSION=0.10.1
 ARG PUB_KEY=RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
 
 # fix vulnerabilities
-RUN apk update && apk upgrade
+RUN echo "edge" > /etc/alpine-release && \
+    apk update && \
+    apk upgrade
 
 # setup zig
 ADD https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz /tmp/zig.tar.xz
@@ -30,6 +32,9 @@ FROM --platform=$BUILDPLATFORM golang:1-alpine
 
 # fix vulnerabilities
 RUN --mount=type=cache,target=/go/pkg \
+    echo "edge" > /etc/alpine-release && \
+    apk update && \
+    apk upgrade && \
     cd /usr/local/go/src && \
     go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
     for D in $(find / -name "go.mod" | sed -r 's|/[^/]+$||'); do echo "upgrading: $D" && cd $D && go get -u ./... && go mod tidy || echo "error while upgrading"; done
