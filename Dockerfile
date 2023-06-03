@@ -28,8 +28,7 @@ FROM --platform=$BUILDPLATFORM golang:1-alpine
 # fix vulnerabilities
 RUN --mount=type=cache,target=/go/pkg \
     cd /usr/local/go/src && \
-    go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto
-RUN --mount=type=cache,target=/go/pkg \
+    go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
     for D in $(find / -name "go.mod" | sed -r 's|/[^/]+$||'); do echo "upgrading: $D" && cd $D && go get -u ./... && go mod tidy || echo "error while upgrading"; done
 
 # setup zig & zigtool
@@ -41,10 +40,8 @@ ENV PATH="/usr/local/bin/zig:${PATH}" \
     GOOS="linux"
 RUN --mount=type=cache,target=/go/pkg \
     go install github.com/dosgo/zigtool/zigcc@latest && \
-    go install github.com/dosgo/zigtool/zigcpp@latest
-
-# cleanup
-RUN go clean -cache && \
+    go install github.com/dosgo/zigtool/zigcpp@latest && \
+    go clean -cache && \
     go clean -modcache
 
 # set working directory
