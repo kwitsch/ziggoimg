@@ -1,25 +1,26 @@
 FROM --platform=$BUILDPLATFORM alpine AS zig-env
 
 ARG ZIG_VERSION=0.10.1
+ARG PUB_KEY=RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
 
 # setup zig
-RUN apk add --no-cache --virtual .extract-deps tar xz minisign
 ADD https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz /tmp/zig.tar.xz
 ADD https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz.minisig /tmp/zig.tar.xz.minisign
-RUN minisign -Vm /tmp/zig.tar.xz -x /tmp/zig.tar.xz.minisign -P RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
-RUN mkdir -p "/usr/local/bin/zig" && tar -Jxf /tmp/zig.tar.xz -C "/usr/local/bin/zig" --strip-components=1
-RUN apk del .extract-deps
+RUN apk add --no-cache --virtual .extract-deps tar xz minisign && \
+    minisign -Vm /tmp/zig.tar.xz -x /tmp/zig.tar.xz.minisign -P ${PUB_KEY} && \
+    mkdir -p "/usr/local/bin/zig" && tar -Jxf /tmp/zig.tar.xz -C "/usr/local/bin/zig" --strip-components=1 && \
+    apk del .extract-deps
 
 # remove unnecessary files
-RUN rm -R /usr/local/bin/zig/lib/libc/include/any-windows-any
-RUN rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.11-none
-RUN rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.12-none
-RUN rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.13-none
-RUN rm -R /usr/local/bin/zig/lib/libc/include/any-macos-any
-RUN rm -R /usr/local/bin/zig/lib/libc/include/any-macos.11-any
-RUN rm -R /usr/local/bin/zig/lib/libc/include/any-macos.12-any
-RUN rm -R /usr/local/bin/zig/lib/libc/include/any-macos.13-any
-RUN rm -R /usr/local/bin/zig/doc
+RUN rm -R /usr/local/bin/zig/lib/libc/include/any-windows-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.11-none && \
+    rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.12-none && \
+    rm -R /usr/local/bin/zig/lib/libc/include/aarch64-macos.13-none && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos.11-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos.12-any && \
+    rm -R /usr/local/bin/zig/lib/libc/include/any-macos.13-any && \
+    rm -R /usr/local/bin/zig/doc
 
 # build environment
 FROM --platform=$BUILDPLATFORM golang:1-alpine
