@@ -1,10 +1,7 @@
-FROM --platform=$BUILDPLATFORM alpine AS zig-env
+FROM --platform=$BUILDPLATFORM alpine:edge AS zig-env
 
 ARG ZIG_VERSION=0.10.1
 ARG PUB_KEY=RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
-
-# fix vulnerabilities
-RUN apk add --no-cache libssl3 libcrypto3 --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # setup zig
 ADD https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz /tmp/zig.tar.xz
