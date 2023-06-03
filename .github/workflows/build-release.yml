@@ -3,7 +3,7 @@ name: Build Release
 on:
   push:
     tags:
-      - v*
+      - 0.*
 
 permissions:
   actions: read
@@ -51,3 +51,5 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            ZIG_VERSION=${GITHUB_REF#refs/*/}
