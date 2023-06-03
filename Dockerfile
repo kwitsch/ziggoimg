@@ -3,7 +3,7 @@ FROM --platform=$BUILDPLATFORM alpine AS zig-env
 ARG ZIG_VERSION=0.10.1
 
 # setup zig
-RUN apk add --no-cache tar xz minisign
+RUN apk add --no-cache tar xz minisign libssl3
 ADD https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz /tmp/zig.tar.xz
 ADD https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz.minisig /tmp/zig.tar.xz.minisign
 RUN minisign -Vm /tmp/zig.tar.xz -x /tmp/zig.tar.xz.minisign -P RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
