@@ -3,11 +3,12 @@ FROM --platform=$BUILDPLATFORM alpine AS zig-env
 ARG ZIG_VERSION=0.10.1
 
 # setup zig
-RUN apk add --no-cache tar xz minisign libssl3
+RUN apk add --no-cache --virtual .extract-deps tar xz minisign
 ADD https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz /tmp/zig.tar.xz
 ADD https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz.minisig /tmp/zig.tar.xz.minisign
 RUN minisign -Vm /tmp/zig.tar.xz -x /tmp/zig.tar.xz.minisign -P RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
 RUN mkdir -p "/usr/local/bin/zig" && tar -Jxf /tmp/zig.tar.xz -C "/usr/local/bin/zig" --strip-components=1
+RUN apk del .extract-deps
 
 # remove unnecessary files
 RUN rm -R /usr/local/bin/zig/lib/libc/include/any-windows-any
