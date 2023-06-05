@@ -1,6 +1,5 @@
 FROM --platform=$BUILDPLATFORM alpine AS zig-env
 
-# ARG ZIG_VERSION=0.10.1
 ARG PUB_KEY=RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
 
 # fix vulnerabilities
@@ -9,8 +8,6 @@ RUN echo "edge" > /etc/alpine-release && \
     apk upgrade
 
 # setup zig
-# ADD https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz /tmp/zig.tar.xz
-# ADD https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz.minisig /tmp/zig.tar.xz.minisign
 COPY zig.tar.xz /tmp/zig.tar.xz
 COPY zig.tar.xz.minisign /tmp/zig.tar.xz.minisign
 RUN apk add --no-cache --virtual .extract-deps tar xz minisign && \
