@@ -36,37 +36,31 @@ jobs:
       
       - name: Get Zig
         if: steps.cache-zig.outputs.cache-hit != 'true'
-        uses: wei/curl@master
-        with:
-          args: |
-            'https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz'
-            --header 'User-Agent: Chrome/113.0.0.0'
-            --header 'Referer: https://ziglang.org/download/'
-            --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"'
-            --header 'Sec-Ch-Ua-Mobile: ?0'
-            --header 'Sec-Ch-Ua-Platform: "Linux"'
-            --header 'Sec-Fetch-Dest: document'
-            --header 'Sec-Fetch-Mode: navigate'
-            --header 'Sec-Fetch-Site: same-origin'
-            --header 'Sec-Fetch-User: ?1'
-            -o 'zig.tar.xz'
+        shell: bash
+        run: |
+          curl --location --request GET 'https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz' \
+          --header 'User-Agent: Chrome/113.0.0.0' \
+          --header 'Referer: https://ziglang.org/download/' \
+          --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"' \
+          --header 'Sec-Ch-Ua-Mobile: ?0' \
+          --header 'Sec-Ch-Ua-Platform: "Linux"' \
+          --header 'Sec-Fetch-Dest: document' \
+          --header 'Sec-Fetch-Mode: navigate' \
+          --header 'Sec-Fetch-Site: same-origin' \
+          --header 'Sec-Fetch-User: ?1' \
+          -o 'zig.tar.xz'
 
-      - name: Get minisign 
-        if: steps.cache-zig.outputs.cache-hit != 'true'
-        uses: wei/curl@master
-        with:
-          args: |
-            'https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz.minisign'
-            --header 'User-Agent: Chrome/113.0.0.0'
-            --header 'Referer: https://ziglang.org/download/'
-            --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"'
-            --header 'Sec-Ch-Ua-Mobile: ?0'
-            --header 'Sec-Ch-Ua-Platform: "Linux"'
-            --header 'Sec-Fetch-Dest: document'
-            --header 'Sec-Fetch-Mode: navigate'
-            --header 'Sec-Fetch-Site: same-origin'
-            --header 'Sec-Fetch-User: ?1'
-            -o 'zig.tar.xz.minisign'
+          curl --location --request GET 'https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz.minisig' \
+          --header 'User-Agent: Chrome/113.0.0.0' \
+          --header 'Referer: https://ziglang.org/download/' \
+          --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"' \
+          --header 'Sec-Ch-Ua-Mobile: ?0' \
+          --header 'Sec-Ch-Ua-Platform: "Linux"' \
+          --header 'Sec-Fetch-Dest: document' \
+          --header 'Sec-Fetch-Mode: navigate' \
+          --header 'Sec-Fetch-Site: same-origin' \
+          --header 'Sec-Fetch-User: ?1' \
+          -o 'zig.tar.xz.minisign'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
