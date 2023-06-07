@@ -1,0 +1,35 @@
+name: Build Latest
+
+on:
+  workflow_dispatch:
+    inputs:
+        zig_version:
+          description: "Zig version"
+          required: true
+
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    uses: kwitsch/ziggoimg/.github/workflows/build-version.yml@main
+    with:
+      zig_version: ${{ inputs.zig_version }}
+
+  latest-tag:
+    name: Tag ${{ inputs.zig_version }} -> latest
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Tag Image
+        shell: bash
+        run: |
+            docker pull ghcr.io/kwitsch/ziggoimg:${{ inputs.zig_version }}
+            docker tag ghcr.io/kwitsch/ziggoimg:${{ inputs.zig_version }} ghcr.io/kwitsch/ziggoimg:latest
+            docker push ghcr.io/kwitsch/ziggoimg:latest
