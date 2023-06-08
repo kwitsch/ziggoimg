@@ -64,6 +64,8 @@ jobs:
           --header 'Sec-Fetch-User: ?1' \
           -o 'zig.tar.xz.minisign'
 
+          cat zig.tar.xz.minisign
+
       - name: Verify download
         if: steps.cache-zig.outputs.cache-hit != 'true'
         uses: thomasdesr/minisign-action@v1
