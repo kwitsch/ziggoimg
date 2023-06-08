@@ -82,12 +82,16 @@ jobs:
         with:
           args: -Vm zig.tar.xz -x zig.tar.xz.minisign -P "RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U"
 
-      - name: Get Zig
+      - name: Extract Zig
         if: steps.cache-zigdir.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          mkdir zigdir
-          tar -Jxf zig.tar.xz -C "zigdir"
+          mkdir -p ./zigdir
+          tar -Jxf zig.tar.xz -C "./zigdir"
+
+          ls ./zigdir
+          ls ./zigdir/lib/libc/include
+
           rm -R ./zigdir/lib/libc/include/any-windows-any
           rm -R ./zigdir/lib/libc/include/aarch64-macos.11-none
           rm -R ./zigdir/lib/libc/include/aarch64-macos.12-none
