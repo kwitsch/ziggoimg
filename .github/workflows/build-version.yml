@@ -7,6 +7,10 @@ on:
         description: "Zig version"
         required: true
         type: string
+      docker_tag:
+        description: "Docker tag"
+        required: true
+        type: string
 
 permissions:
   security-events: write
@@ -70,6 +74,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/kwitsch/ziggoimg
+          tags: |
+            type=raw,value=${{ inputs.docker_tag }}
+            type=raw,value=${{ inputs.zig_version }},enable=${{ inputs.docker_tag == 'latest' }}
+          labels: |
+            org.opencontainers.image.version=${{ inputs.zig_version }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -77,7 +92,8 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/kwitsch/ziggoimg:${{ inputs.zig_version }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -89,7 +105,7 @@ jobs:
       - name: Run Trivy vulnerability scanner on Docker image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/kwitsch/ziggoimg:${{ inputs.zig_version }}'
+          image-ref: 'ghcr.io/kwitsch/ziggoimg:${{ inputs.docker_tag }}'
           format: 'sarif'
           output: 'trivy-image-results.sarif'
 

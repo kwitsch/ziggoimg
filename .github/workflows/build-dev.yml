@@ -17,3 +17,4 @@ jobs:
     uses: kwitsch/ziggoimg/.github/workflows/build-version.yml@main
     with:
       zig_version: "0.10.1"
+      docker_tag: "dev"
