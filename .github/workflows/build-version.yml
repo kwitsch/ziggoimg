@@ -87,7 +87,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p ./zigdir
-          tar -Jxf zig.tar.xz -C "./zigdir"
+          tar -Jxf zig.tar.xz -C "./zigdir" --strip-components=1
 
           ls ./zigdir
           ls ./zigdir/lib/libc/include
