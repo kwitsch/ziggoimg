@@ -88,15 +88,15 @@ jobs:
         run: |
           mkdir zigdir
           tar -Jxf zig.tar.xz -C "zigdir"
-          rm -R zigdir/lib/libc/include/any-windows-any
-          rm -R zigdir/lib/libc/include/aarch64-macos.11-none
-          rm -R zigdir/lib/libc/include/aarch64-macos.12-none
-          rm -R zigdir/lib/libc/include/aarch64-macos.13-none
-          rm -R zigdir/lib/libc/include/any-macos-any
-          rm -R zigdir/lib/libc/include/any-macos.11-any
-          rm -R zigdir/lib/libc/include/any-macos.12-any
-          rm -R zigdir/lib/libc/include/any-macos.13-any
-          rm -R zigdir/doc
+          rm -R ./zigdir/lib/libc/include/any-windows-any
+          rm -R ./zigdir/lib/libc/include/aarch64-macos.11-none
+          rm -R ./zigdir/lib/libc/include/aarch64-macos.12-none
+          rm -R ./zigdir/lib/libc/include/aarch64-macos.13-none
+          rm -R ./zigdir/lib/libc/include/any-macos-any
+          rm -R ./zigdir/lib/libc/include/any-macos.11-any
+          rm -R ./zigdir/lib/libc/include/any-macos.12-any
+          rm -R ./zigdir/lib/libc/include/any-macos.13-any
+          rm -R ./zigdir/doc
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
