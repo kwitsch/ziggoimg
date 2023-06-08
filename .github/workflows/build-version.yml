@@ -76,15 +76,16 @@ jobs:
 
           cat zig.tar.xz.minisign
 
+      - name: Verify download
+        if: steps.cache-zig.outputs.cache-hit != 'true' && steps.cache-zigdir.outputs.cache-hit != 'true'
+        uses: thomasdesr/minisign-action@v1
+        with:
+          args: -Vm zig.tar.xz -x zig.tar.xz.minisign -P "RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U"
+
       - name: Get Zig
         if: steps.cache-zigdir.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          apt update
-          apt install minisign
-
-          minisign -Vm zig.tar.xz -x zig.tar.xz.minisign -P "RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U"
-
           mkdir zigdir
           tar -Jxf zig.tar.xz -C "zigdir"
           rm -R zigdir/lib/libc/include/any-windows-any
