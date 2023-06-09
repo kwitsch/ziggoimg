@@ -23,8 +23,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-dir:
+    name: Check if Zig ${{ inputs.zig_version }} has to be fetched
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.check-zigdir.outputs.cache-hit }}
+    steps:
+      - name: Check
+        id: check-zigdir
+        uses: actions/cache/restore@v3
+        with:
+          key: zigdir-${{ inputs.zig_version }}
+          path: |
+            zigdir
+
+  fetch:
+    name: Fetch Zig directory for ${{ inputs.zig_version }}
+    needs: check-dir
+    if: needs.check-dir.outputs.cache-hit != 'true'
+    uses: kwitsch/ziggoimg/.github/workflows/get-zigdir.yml@main
+    with:
+      zig_version: ${{ inputs.zig_version }}
+
   docker:
     name: Build Docker image
+    needs: [ check-dir, fetch ]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,74 +58,11 @@ jobs:
 
       - name: Cache Zig directory
         id: cache-zigdir
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         with:
           key: zigdir-${{ inputs.zig_version }}
           path: |
             zigdir
-
-      - name: Cache Zig
-        id: cache-zig
-        if: steps.cache-zigdir.outputs.cache-hit != 'true'
-        uses: actions/cache@v3
-        with:
-          key: zig-${{ inputs.zig_version }}
-          path: |
-            zig.tar.xz
-            zig.tar.xz.minisign
-      
-      - name: Get Zig
-        if: steps.cache-zig.outputs.cache-hit != 'true' && steps.cache-zigdir.outputs.cache-hit != 'true'
-        shell: bash
-        run: |
-          curl --location --request GET 'https://ziglang.org/download/${{ inputs.zig_version }}/zig-linux-x86_64-${{ github.event.inputs.zig_version }}.tar.xz' \
-          --header 'User-Agent: Chrome/113.0.0.0' \
-          --header 'Referer: https://ziglang.org/download/' \
-          --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"' \
-          --header 'Sec-Ch-Ua-Mobile: ?0' \
-          --header 'Sec-Ch-Ua-Platform: "Linux"' \
-          --header 'Sec-Fetch-Dest: document' \
-          --header 'Sec-Fetch-Mode: navigate' \
-          --header 'Sec-Fetch-Site: same-origin' \
-          --header 'Sec-Fetch-User: ?1' \
-          -o 'zig.tar.xz'
-
-          curl --location --request GET 'https://ziglang.org/download/${{ inputs.zig_version }}/zig-linux-x86_64-${{ github.event.inputs.zig_version }}.tar.xz.minisig' \
-          --header 'User-Agent: Chrome/113.0.0.0' \
-          --header 'Referer: https://ziglang.org/download/' \
-          --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"' \
-          --header 'Sec-Ch-Ua-Mobile: ?0' \
-          --header 'Sec-Ch-Ua-Platform: "Linux"' \
-          --header 'Sec-Fetch-Dest: document' \
-          --header 'Sec-Fetch-Mode: navigate' \
-          --header 'Sec-Fetch-Site: same-origin' \
-          --header 'Sec-Fetch-User: ?1' \
-          -o 'zig.tar.xz.minisign'
-
-          cat zig.tar.xz.minisign
-
-      - name: Verify download
-        if: steps.cache-zig.outputs.cache-hit != 'true' && steps.cache-zigdir.outputs.cache-hit != 'true'
-        uses: thomasdesr/minisign-action@v1
-        with:
-          args: -Vm zig.tar.xz -x zig.tar.xz.minisign -P "RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U"
-
-      - name: Extract Zig
-        if: steps.cache-zigdir.outputs.cache-hit != 'true'
-        shell: bash
-        run: |
-          mkdir -p ./zigdir
-          tar -Jxf zig.tar.xz -C "./zigdir" --strip-components=1
-
-          rm -R ./zigdir/lib/libc/include/any-windows-any
-          rm -R ./zigdir/lib/libc/include/aarch64-macos.11-none
-          rm -R ./zigdir/lib/libc/include/aarch64-macos.12-none
-          rm -R ./zigdir/lib/libc/include/aarch64-macos.13-none
-          rm -R ./zigdir/lib/libc/include/any-macos-any
-          rm -R ./zigdir/lib/libc/include/any-macos.11-any
-          rm -R ./zigdir/lib/libc/include/any-macos.12-any
-          rm -R ./zigdir/lib/libc/include/any-macos.13-any
-          rm -R ./zigdir/doc
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
