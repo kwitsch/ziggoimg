@@ -5,6 +5,7 @@ RUN --mount=type=cache,target=/go/pkg \
     echo "edge" > /etc/alpine-release && \
     apk update && \
     apk upgrade && \
+    apk add build-base && \
     cd /usr/local/go/src && \
     go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
     for D in $(find / -name "go.mod" | sed -r 's|/[^/]+$||'); do echo "upgrading: $D" && cd $D && go get -u ./... && go mod tidy || echo "error while upgrading"; done
