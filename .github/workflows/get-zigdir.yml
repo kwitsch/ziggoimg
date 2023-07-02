@@ -61,6 +61,14 @@ jobs:
         with:
           args: -Vm zig.tar.xz -x zig.tar.xz.minisign -P "RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U"
 
+      - name: Cache Zig directory
+        id: cache-zigdir
+        uses: actions/cache/restore@v3
+        with:
+          key: zigdir-${{ inputs.zig_version }}
+          path: |
+            zigdir
+
       - name: Extract Zig
         shell: bash
         run: |
