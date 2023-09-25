@@ -29,7 +29,7 @@ jobs:
         if: steps.cache-zig.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          curl --location --request GET 'https://ziglang.org/download/${{ inputs.zig_version }}/zig-linux-x86_64-${{ github.event.inputs.zig_version }}.tar.xz' \
+          curl --location --request GET 'https://ziglang.org/download/${{ inputs.zig_version }}/zig-linux-x86_64-${{ inputs.zig_version }}.tar.xz' \
           --header 'User-Agent: Chrome/113.0.0.0' \
           --header 'Referer: https://ziglang.org/download/' \
           --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"' \
@@ -41,7 +41,7 @@ jobs:
           --header 'Sec-Fetch-User: ?1' \
           -o 'zig.tar.xz'
 
-          curl --location --request GET 'https://ziglang.org/download/${{ inputs.zig_version }}/zig-linux-x86_64-${{ github.event.inputs.zig_version }}.tar.xz.minisig' \
+          curl --location --request GET 'https://ziglang.org/download/${{ inputs.zig_version }}/zig-linux-x86_64-${{ inputs.zig_version }}.tar.xz.minisig' \
           --header 'User-Agent: Chrome/113.0.0.0' \
           --header 'Referer: https://ziglang.org/download/' \
           --header 'Sec-Ch-Ua: "Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"' \
