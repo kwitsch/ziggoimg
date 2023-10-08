@@ -5,7 +5,7 @@ RUN --mount=type=cache,target=/go/pkg \
     echo "edge" > /etc/alpine-release && \
     apk update && \
     apk upgrade && \
-    apk add build-base make libcap musl-dev && \
+    apk add build-base make libcap musl-dev coreutils && \
     rm /var/cache/apk/* && \
     cd /usr/local/go/src && \
     go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
