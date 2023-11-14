@@ -1,0 +1,37 @@
+name: Scan Image
+
+on:
+  workflow_call:
+    inputs:
+      docker_tag:
+        description: "Docker tag"
+        required: true
+        type: string
+
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+
+concurrency:
+  group: ${{ inputs.docker_tag }}-image_scan
+  cancel-in-progress: true
+
+jobs:
+  image-scan:
+    name: Image vulnerability scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scan for vulnerabilities
+        id: scan
+        uses: crazy-max/ghaction-container-scan@v3
+        with:
+          image: ghcr.io/kwitsch/ziggoimg:${{ inputs.docker_tag }}
+          dockerfile: ./Dockerfile
+          annotations: true
+
+      - name: Upload SARIF file
+        if: ${{ steps.scan.outputs.sarif != '' }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}

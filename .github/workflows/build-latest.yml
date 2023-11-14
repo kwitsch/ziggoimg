@@ -11,7 +11,14 @@ permissions:
 
 jobs:
   build:
+    name: Build Latest Image
     uses: kwitsch/ziggoimg/.github/workflows/build-version.yml@main
     with:
       zig_version: ${{ vars.LATEST_ZIG_VERSION }}
+      docker_tag: "latest"
+
+  scan:
+    name: Scan Latest Image
+    uses: kwitsch/ziggoimg/.github/workflows/scan-image.yml@main
+    with:
       docker_tag: "latest"

@@ -15,7 +15,14 @@ permissions:
 
 jobs:
   build:
+    name: Build Development Image
     uses: kwitsch/ziggoimg/.github/workflows/build-version.yml@main
     with:
       zig_version: ${{ vars.LATEST_ZIG_VERSION }}
+      docker_tag: "dev"
+
+  scan:
+    name: Scan Development Image
+    uses: kwitsch/ziggoimg/.github/workflows/scan-image.yml@main
+    with:
       docker_tag: "dev"
