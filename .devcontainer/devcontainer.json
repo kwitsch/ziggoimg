@@ -1,0 +1,46 @@
+{
+  "name": "ziggoimg development",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/prettier:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "dockerDashComposeVersion": "v2"
+    }
+  },
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "yzhang.markdown-all-in-one",
+        "GitHub.vscode-github-actions",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "[json][jsonc][github-actions-workflow]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+        },
+        "[dockerfile]": {
+          "editor.defaultFormatter": "ms-azuretools.vscode-docker",
+          "editor.quickSuggestions": {
+            "strings": true
+          }
+        }
+      }
+    }
+  },
+  "mounts": [
+    "type=bind,readonly,source=/etc/localtime,target=/usr/share/host/localtime",
+    "type=bind,readonly,source=/etc/timezone,target=/usr/share/host/timezone"
+  ]
+}
