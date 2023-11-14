@@ -18,7 +18,7 @@ permissions:
   contents: read
   packages: write
 
-concurrency: 
+concurrency:
   group: ${{ inputs.docker_tag }}-${{ inputs.zig_version }}
   cancel-in-progress: true
 
@@ -47,7 +47,7 @@ jobs:
 
   docker:
     name: Build Docker image
-    needs: [ check-dir, fetch ]
+    needs: [check-dir, fetch]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +73,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -102,14 +102,16 @@ jobs:
     needs: docker
     if: ${{ always() }}
     steps:
-      - name: Run Trivy vulnerability scanner on Docker image
-        uses: aquasecurity/trivy-action@master
+      - name: Scan for vulnerabilities
+        id: scan
+        uses: crazy-max/ghaction-container-scan@v3
         with:
-          image-ref: ghcr.io/kwitsch/ziggoimg:${{ inputs.docker_tag }}
-          format: 'sarif'
-          output: 'trivy-image-results.sarif'
+          image: ghcr.io/kwitsch/ziggoimg:${{ inputs.docker_tag }}
+          dockerfile: ./Dockerfile
+          annotations: true
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Upload SARIF file
+        if: ${{ steps.scan.outputs.sarif != '' }}
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-image-results.sarif'
+          sarif_file: ${{ steps.scan.outputs.sarif }}
