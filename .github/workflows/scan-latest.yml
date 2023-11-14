@@ -1,4 +1,4 @@
-name: Scan Image
+name: Scan Latest Image
 
 on:
   workflow_dispatch:
