@@ -2,20 +2,10 @@ name: Build Latest
 
 on:
   workflow_dispatch:
-    inputs:
-        zig_version:
-          description: "Zig version"
-          required: true
-
-permissions:
-  security-events: write
-  actions: read
-  contents: read
-  packages: write
 
 jobs:
   build:
     uses: kwitsch/ziggoimg/.github/workflows/build-version.yml@main
     with:
-      zig_version: ${{ inputs.zig_version }}
+      zig_version: ${{ vars.LATEST_ZIG_VERSION }}
       docker_tag: "latest"
