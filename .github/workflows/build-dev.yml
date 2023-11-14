@@ -24,5 +24,6 @@ jobs:
   scan:
     name: Scan Development Image
     uses: kwitsch/ziggoimg/.github/workflows/scan-image.yml@main
+    needs: build
     with:
       docker_tag: "dev"
