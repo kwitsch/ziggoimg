@@ -9,6 +9,7 @@ permissions:
   security-events: write
   actions: read
   contents: read
+  packages: write
 
 concurrency:
   group: latest-image-scan
