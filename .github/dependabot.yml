@@ -4,3 +4,11 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    assignees:
+      - "kwitsch"
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: daily
+    assignees:
+      - "kwitsch"
