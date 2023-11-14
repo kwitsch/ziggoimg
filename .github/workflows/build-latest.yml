@@ -3,6 +3,12 @@ name: Build Latest
 on:
   workflow_dispatch:
 
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+  packages: write
+
 jobs:
   build:
     uses: kwitsch/ziggoimg/.github/workflows/build-version.yml@main
