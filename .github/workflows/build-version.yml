@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Check
         id: check-zigdir
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           key: zigdir-${{ inputs.zig_version }}
           path: |
@@ -56,7 +56,7 @@ jobs:
 
       - name: Cache Zig directory
         id: cache-zigdir
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           key: zigdir-${{ inputs.zig_version }}
           path: |
