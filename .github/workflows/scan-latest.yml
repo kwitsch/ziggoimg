@@ -20,11 +20,17 @@ jobs:
     name: Image vulnerability scan
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Scan for vulnerabilities
         uses: crazy-max/ghaction-container-scan@v3
         with:
           image: ghcr.io/kwitsch/ziggoimg:latest
-          severity_threshold: HIGH
+          severity_threshold: MEDIUM
+          dockerfile: ./Dockerfile
 
   build:
     name: Rebuild Latest Image
