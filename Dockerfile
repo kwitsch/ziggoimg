@@ -3,12 +3,12 @@
 FROM --platform=$BUILDPLATFORM golang:1-alpine
 
 # fix vulnerabilities
-RUN --mount=type=cache,target=/go/pkg \
+RUN --mount=type=cache,target=/var/cache/apk \
   echo "edge" > /etc/alpine-release && \
   apk update && \
   apk upgrade && \
-  apk add build-base make libcap musl-dev coreutils && \
-  rm /var/cache/apk/* && \
+  apk add build-base make libcap musl-dev coreutils 
+RUN --mount=type=cache,target=/go/pkg \
   cd /usr/local/go/src && \
   go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
   for D in $(find / -name "go.mod" | sed -r 's|/[^/]+$||'); do echo "upgrading: $D" && cd $D && go get -u ./... && go mod tidy || echo "error while upgrading"; done
