@@ -58,8 +58,8 @@ jobs:
 
   docker:
     name: Build Docker image
-    needs: [check-dir, fetch]
-    if: ${{ always() }}
+    needs: [check-dir, fetch, image-scan]
+    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -114,7 +114,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   image-rescan:
-    name: Image vulnerability scan
+    name: Image vulnerability rescan
     needs: docker
     runs-on: ubuntu-latest
     steps:
