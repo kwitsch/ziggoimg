@@ -2,14 +2,11 @@ name: Build Development
 
 on:
   workflow_dispatch:
-  pull_request:
   push:
     branches:
       - main
 
 permissions:
-  security-events: write
-  actions: read
   contents: read
   packages: write
 
