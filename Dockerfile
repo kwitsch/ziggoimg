@@ -22,9 +22,7 @@ ENV PATH="/usr/local/bin/zig:${PATH}" \
   GOOS="linux"
 RUN --mount=type=cache,target=/go/pkg \
   go install github.com/dosgo/zigtool/zigcc@latest && \
-  go install github.com/dosgo/zigtool/zigcpp@latest && \
-  go clean -cache && \
-  go clean -modcache
+  go install github.com/dosgo/zigtool/zigcpp@latest
 
 # set working directory
 WORKDIR /go/src
