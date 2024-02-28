@@ -76,7 +76,9 @@ jobs:
           images: kwitsch/ziggoimg,ghcr.io/kwitsch/ziggoimg
           tags: |
             type=raw,value=latest
-            type=raw,value=${{ vars.LATEST_ZIG_VERSION }}
+            type=semver,pattern={{version}},value=v${{ vars.LATEST_ZIG_VERSION }}
+            type=semver,pattern={{major}},value=v${{ vars.LATEST_ZIG_VERSION }}
+            type=semver,pattern={{major}}.{{minor}},value=v${{ vars.LATEST_ZIG_VERSION }}
           labels: |
             org.opencontainers.image.version=${{ vars.LATEST_ZIG_VERSION }}
 
