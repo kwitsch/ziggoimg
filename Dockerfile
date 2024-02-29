@@ -15,7 +15,6 @@ RUN --mount=type=cache,target=/go/pkg \
   go get -u golang.org/x/sys golang.org/x/net golang.org/x/text golang.org/x/crypto && \
   for D in $(find / -name "go.mod" | sed -r 's|/[^/]+$||'); do echo "upgrading: $D" && cd $D && go get -u ./... && go mod tidy -v || echo "error while upgrading"; done && \
   echo "vendorizing..." && \
-  rm -R vendor && \
   go mod vendor -v
 
 # setup zig & zigtool
