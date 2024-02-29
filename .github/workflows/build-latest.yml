@@ -75,12 +75,9 @@ jobs:
         with:
           images: kwitsch/ziggoimg,ghcr.io/kwitsch/ziggoimg
           tags: |
-            type=raw,value=latest
             type=semver,pattern={{version}},value=v${{ vars.LATEST_ZIG_VERSION }}
             type=semver,pattern={{major}},value=v${{ vars.LATEST_ZIG_VERSION }}
             type=semver,pattern={{major}}.{{minor}},value=v${{ vars.LATEST_ZIG_VERSION }}
-          labels: |
-            org.opencontainers.image.version=${{ vars.LATEST_ZIG_VERSION }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -90,5 +87,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
