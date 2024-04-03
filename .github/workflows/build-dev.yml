@@ -63,6 +63,8 @@ jobs:
           cache-to: type=gha,mode=max
 
   scan:
+    name: Scan Docker image
+    needs: [docker]
     uses: kwitsch/ziggoimg/.github/workflows/scan-image.yml@main
     with:
       docker_tag: "dev"
