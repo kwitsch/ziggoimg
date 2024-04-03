@@ -3,9 +3,7 @@
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
   "features": {
     "ghcr.io/devcontainers-contrib/features/prettier:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "dockerDashComposeVersion": "v2"
-    }
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   "remoteEnv": {
     "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
@@ -16,7 +14,9 @@
         "esbenp.prettier-vscode",
         "yzhang.markdown-all-in-one",
         "GitHub.vscode-github-actions",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "foxundermoon.shell-format",
+        "redhat.vscode-yaml"
       ],
       "settings": {
         "editor.tabSize": 2,
@@ -24,8 +24,18 @@
         "editor.detectIndentation": false,
         "editor.formatOnSave": true,
         "editor.formatOnPaste": true,
-        "[json][jsonc][yaml][github-actions-workflow]": {
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit",
+          "source.addMissingImports": "explicit",
+          "source.fixAll": "explicit"
+        },
+        "yaml.format.enable": false,
+        "yaml.disableDefaultProperties": true,
+        "[json][jsonc][yaml][xml][github-actions-workflow]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[shellscript][ignore][properties]": {
+          "editor.defaultFormatter": "foxundermoon.shell-format"
         },
         "[markdown]": {
           "editor.defaultFormatter": "yzhang.markdown-all-in-one"
