@@ -3,13 +3,12 @@
 FROM --platform=$BUILDPLATFORM alpine:edge
 
 RUN --mount=type=cache,target=/var/cache/apk \
+  echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
   # update packages
   apk update && \
   apk upgrade && \
   # install build tools and go
-  apk add build-base make libcap musl-dev coreutils go && \
-  # install zig
-  apk add zig --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+  apk add build-base make libcap musl-dev coreutils go zig
 
 # install zigcc and zigcpp
 RUN --mount=type=cache,target=/go/pkg \

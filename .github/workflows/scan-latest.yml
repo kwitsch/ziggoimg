@@ -32,33 +32,9 @@ jobs:
           severity_threshold: MEDIUM
           dockerfile: ./Dockerfile
 
-  check-dir:
-    name: Check if Zig ${{ vars.LATEST_ZIG_VERSION }} has to be fetched
-    needs: image-scan
-    if: failure()
-    runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.check-zigdir.outputs.cache-hit }}
-    steps:
-      - name: Check
-        id: check-zigdir
-        uses: actions/cache/restore@v4
-        with:
-          key: zigdir-${{ vars.LATEST_ZIG_VERSION }}
-          path: |
-            zigdir
-
-  fetch:
-    name: Fetch Zig directory for ${{ vars.LATEST_ZIG_VERSION }}
-    needs: check-dir
-    if: needs.check-dir.outputs.cache-hit != 'true'
-    uses: kwitsch/ziggoimg/.github/workflows/get-zigdir.yml@main
-    with:
-      zig_version: ${{ vars.LATEST_ZIG_VERSION }}
-
   docker:
     name: Build Docker image
-    needs: [check-dir, fetch, image-scan]
+    needs: [image-scan]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
@@ -66,14 +42,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Cache Zig directory
-        id: cache-zigdir
-        uses: actions/cache/restore@v4
-        with:
-          key: zigdir-${{ vars.LATEST_ZIG_VERSION }}
-          path: |
-            zigdir
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -112,16 +80,6 @@ jobs:
           annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  image-rescan:
-    name: Image vulnerability rescan
-    needs: docker
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Scan for vulnerabilities
         uses: crazy-max/ghaction-container-scan@v3
