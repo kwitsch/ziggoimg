@@ -76,11 +76,9 @@ jobs:
           tar -Jxf zig.tar.xz -C "./zigdir" --strip-components=1
 
           rm -R ./zigdir/lib/libc/include/any-windows-any
-          rm -R ./zigdir/lib/libc/include/aarch64-macos.11-none
           rm -R ./zigdir/lib/libc/include/aarch64-macos.12-none
           rm -R ./zigdir/lib/libc/include/aarch64-macos.13-none
           rm -R ./zigdir/lib/libc/include/any-macos-any
-          rm -R ./zigdir/lib/libc/include/any-macos.11-any
           rm -R ./zigdir/lib/libc/include/any-macos.12-any
           rm -R ./zigdir/lib/libc/include/any-macos.13-any
           rm -R ./zigdir/doc
